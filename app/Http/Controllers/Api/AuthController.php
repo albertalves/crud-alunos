@@ -84,7 +84,7 @@ class AuthController extends Controller
 
         $user->create($data);
 
-        return $this->authenticate();
+        return $this->authenticate($request);
     }
 
     /**

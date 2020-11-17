@@ -25,3 +25,7 @@ const app = new Vue({
     store,
     vuetify
 });
+
+store.dispatch('checkLogin')
+    .then(() => router.push(store.state.auth.urlBack))
+    .catch()

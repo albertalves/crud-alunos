@@ -1,4 +1,4 @@
-const URL_BASE = '/api/user';
+const URL_BASE = '/api';
 
 import router from '../../routes/router'
 
@@ -6,7 +6,7 @@ export default {
     state: {
         me: {},
         authenticated: false,
-        urlBack: 'dashboard',
+        urlBack: 'home',
     },
 
     mutations: {
@@ -27,36 +27,45 @@ export default {
 
     actions: {
         register(context, params) {
+            context.commit('CHANGE_PRELOADER', true)
+
             return new Promise((resolve, reject) => {
                 axios.post(URL_BASE + '/register', params)
-                        .then(response => {
-                            context.commit('AUTH_USER_OK', response.data.user)
-
-                            const token = response.data.token;
-                            
-                            localStorage.setItem('TOKEN_AUTH', token)
-                            window.axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
-
-                            resolve()
-                        })
-                        .catch(error => reject(error))
-                ;
+                    .then(response => {
+                        context.commit('AUTH_USER_OK', response.data.user)
+                        
+                        const token = response.data.token;
+                        localStorage.setItem('TOKEN_AUTH', token)
+                        window.axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+                        resolve()
+                    })
+                    .catch(error => reject(error))
+                    .finally(() => context.commit('CHANGE_PRELOADER', false));
             })
         },
         
         login(context, params) {
-            return axios.post(URL_BASE + '/auth', params)
-                        .then(response => {
-                            context.commit('AUTH_USER_OK', response.data.user)
+            context.commit('CHANGE_PRELOADER', true)
+            return new Promise((resolve, reject) => {
+                axios.post(URL_BASE + '/auth', params)
+                    .then(response => {
+                        context.commit('AUTH_USER_OK', response.data.user)
 
-                            const token = response.data.token;
-                            
-                            localStorage.setItem('TOKEN_AUTH', token)
-                            window.axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
-                        })
-                        .catch(error => console.log(error))
+                        const token = response.data.token;
+                        localStorage.setItem('TOKEN_AUTH', token)
+                        window.axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+
+                        resolve()
+                    })
+                    .catch(error => reject(error))
+                    .finally(() => context.commit('CHANGE_PRELOADER', false));
+            })
         },
 
+        /**
+         * 
+         * Verifica se o usuário já está logado
+         */
         checkLogin(context) {
             return new Promise((resolve, reject) => {
                 const token = localStorage.getItem('TOKEN_AUTH')
@@ -64,11 +73,11 @@ export default {
                 if(!token) return reject()
 
                 axios.get(URL_BASE + '/me')
-                        .then(response => {
-                            context.commit('AUTH_USER_OK', response.data.user)
-                            resolve()
-                        })
-                        .catch(() => reject())
+                    .then(response => {
+                        context.commit('AUTH_USER_OK', response.data.user)
+                        resolve()
+                    })
+                    .catch(() => reject())
             })
         },
 
