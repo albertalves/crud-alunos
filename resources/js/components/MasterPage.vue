@@ -9,7 +9,7 @@
 
         <v-list-item :to="{name: 'home'}">
           <v-list-item-action>
-            <v-icon>mdi-account</v-icon>
+            <v-icon>mdi-home</v-icon>
           </v-list-item-action>
           <v-list-item-content>
             <v-list-item-title>Home</v-list-item-title>
@@ -21,7 +21,7 @@
             <v-icon>mdi-account</v-icon>
           </v-list-item-action>
           <v-list-item-content>
-            <v-list-item-title>Adicionar Aluno</v-list-item-title>
+            <v-list-item-title>Alunos</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
 
@@ -30,13 +30,22 @@
             <v-icon>mdi-account</v-icon>
           </v-list-item-action>
           <v-list-item-content>
-            <v-list-item-title>Adicionar Turma</v-list-item-title>
+            <v-list-item-title>Turmas</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+
+        <v-list-item :to="{name: 'unidade'}">
+          <v-list-item-action>
+            <v-icon>mdi-domain</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Unidades</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
 
         <v-list-item @click.prevent="logout">
           <v-list-item-action>
-            <v-icon>mdi-home</v-icon>
+            <v-icon>mdi-television</v-icon>
           </v-list-item-action>
           <v-list-item-content>
             <v-list-item-title>Sair</v-list-item-title>
@@ -88,3 +97,23 @@
     }
   }
 </script>
+
+<style>
+.v-enter,
+.v-leave-to {
+  opacity: 0;
+}
+
+.v-enter {
+  transform: translate3d(0, -20px, 0);
+}
+
+.v-leave-to {
+  transform: translate3d(0, 20px, 0);
+}
+
+.v-enter-active,
+.v-leave-active {
+  transition: all .3s;
+}
+</style>
