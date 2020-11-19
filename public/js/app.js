@@ -109816,17 +109816,10 @@ var routes = [{
   }]
 }];
 var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
+  mode: 'history',
   routes: routes
 });
 router.beforeEach(function (to, from, next) {
-  // se a rota for protegida e o usuário não estiver logado
-  if (to.meta.auth && !_vuex_store__WEBPACK_IMPORTED_MODULE_2__["default"].state.auth.authenticated) {
-    _vuex_store__WEBPACK_IMPORTED_MODULE_2__["default"].commit('CHANGE_URL_BACK', to.path);
-    return router.push({
-      name: 'login'
-    });
-  }
-
   if (to.matched.some(function (registro) {
     return registro.meta.auth;
   }) && !_vuex_store__WEBPACK_IMPORTED_MODULE_2__["default"].state.auth.authenticated) {
