@@ -114,15 +114,13 @@ export default {
                 })
                 .catch(error => {
                     this.errors = error.response.data.errors;
-                    
-                    let msg;
                     if(this.errors){
-                        msg = 'Preencha os campos obrigatórios!'
+                        console.log(error.response.data);
+                        this.$snotify.error('Campos obrigatórios!', 'Ops...')
                     }else if(error.response.status == 401){
-                        msg = error.response.data;
+                        this.$snotify.error(error.response.data, 'Ops...')
+                        this.$router.push({name: 'aluno'});
                     }
-
-                    this.$snotify.error(msg, 'Ops...')
                 })
         },
         buscarEndereco() {
@@ -150,7 +148,7 @@ export default {
          */
         montarCheckTurmas(){
             this.aluno.turmas.forEach(element => this.chkTurmas.push(element.id));
-            this.aluno.turmasOld = this.chkTurmas;
+            this.aluno.turmasOld = this.updating ? this.chkTurmas : '';
         }
     },
 }

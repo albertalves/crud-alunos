@@ -33,17 +33,19 @@ class AlunoController extends Controller
         
         if (!empty($data['turmas'])) {
             foreach ($data['turmas'] as $turma) {
-                if($this->verificarVagasTurma($turma)) {
-                    // dessa forma o aluno será criado somente uma vez
-                    if(!$aluno) $aluno = Aluno::create($data);
                 
-                    $alunoTurma = new AlunoTurma();
-                    $alunoTurma->turma_id = $turma;
-                    $alunoTurma->aluno_id = $aluno->id;
-                    $alunoTurma->save();
-                }else{
-                    return response()->json('Não há vagas para esta turma', 401);
+                $turma = $this->verificarVagasTurma($turma);
+                if($turma['nome']) {
+                    return response()->json('Não há vagas para '. $turma['nome'], 401);
                 }
+
+                // dessa forma o aluno será criado somente uma vez
+                if(!$aluno) $aluno = Aluno::create($data);
+            
+                $alunoTurma = new AlunoTurma();
+                $alunoTurma->turma_id = $turma;
+                $alunoTurma->aluno_id = $aluno->id;
+                $alunoTurma->save();
             }
         }else{
             $aluno = Aluno::create($data);
@@ -72,6 +74,12 @@ class AlunoController extends Controller
 
         if (count($adicionarTurmas) > 0) {
             foreach ($adicionarTurmas as $turmaId) {
+                $turma = $this->verificarVagasTurma($turmaId);
+
+                if($turma['nome']) {
+                    return response()->json('Não há vagas para '. $turma['nome'], 401);
+                }
+
                 $alunoTurma = new AlunoTurma();
                 $alunoTurma->turma_id = $turmaId;
                 $alunoTurma->aluno_id = $data['id'];
@@ -91,13 +99,13 @@ class AlunoController extends Controller
     }
 
     /**
-     *  Retorna true caso houver vaga na turma
+     *  Retorna true, se houver vaga para a turma.
      */
     public function verificarVagasTurma($turma_id){
         $turma = Turma::where('id', $turma_id)->with('alunos')->first();
         $qtdAlunos = count($turma->alunos);
         $vagas = $turma->vagas;
-
-        return ($vagas > $qtdAlunos) ? true : false;
+        
+        return ($vagas > $qtdAlunos) ? [true, 'há vagas'] : [false, 'nome' => $turma->nome];
     }
 }

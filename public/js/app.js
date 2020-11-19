@@ -2514,15 +2514,18 @@ __webpack_require__.r(__webpack_exports__);
         _this.$snotify.success(response, 'Pronto!');
       })["catch"](function (error) {
         _this.errors = error.response.data.errors;
-        var msg;
 
         if (_this.errors) {
-          msg = 'Preencha os campos obrigatórios!';
-        } else if (error.response.status == 401) {
-          msg = error.response.data;
-        }
+          console.log(error.response.data);
 
-        _this.$snotify.error(msg, 'Ops...');
+          _this.$snotify.error('Campos obrigatórios!', 'Ops...');
+        } else if (error.response.status == 401) {
+          _this.$snotify.error(error.response.data, 'Ops...');
+
+          _this.$router.push({
+            name: 'aluno'
+          });
+        }
       });
     },
     buscarEndereco: function buscarEndereco() {
@@ -2556,7 +2559,7 @@ __webpack_require__.r(__webpack_exports__);
       this.aluno.turmas.forEach(function (element) {
         return _this4.chkTurmas.push(element.id);
       });
-      this.aluno.turmasOld = this.chkTurmas;
+      this.aluno.turmasOld = this.updating ? this.chkTurmas : '';
     }
   }
 });
