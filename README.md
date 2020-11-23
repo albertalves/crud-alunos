@@ -1,11 +1,27 @@
 ## Sobre
-Projeto desenvolvido em Laravel e VueJs
+Esse projeto é uma aplicação SPA desenvolvida em Laravel e VueJs. 
+
+## Recursos 
+- Autenticação JWT
+- Api Restful (laravel)
+- Relacionamento entre tabelas (laravel)
+- Vuex
+- Vue-router
 
 ## Instalar dependências
-Necessário executar os comandos a baixo para instalar as dependências
 - composer install
 - npm install
 
-## Rodar o projeto
+## Executando o projeto
+Gerar a chave de criptografia do laravel.
+- php artisan key:generate
+
+Gerar chave de autenticação jwt.
+- php artisan jwt:secret
+
+Rodar as migrations.
+- php artisan migrate
+
+Executar o projeto.
 - php artisan serve
 - npm run watch
