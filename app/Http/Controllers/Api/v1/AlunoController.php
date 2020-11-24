@@ -12,17 +12,10 @@ use App\Models\Turma;
 class AlunoController extends Controller
 {
     public function index(Request $request){
-        $data = Aluno::all();
-
-        // Se for enviado algum filtro
-        if ($request->select) {
-            $data = Aluno::where('nome', 'LIKE', "%{$request->nameOrEmail}%")
-            ->orWhere('email', 'LIKE', "%$request->nameOrEmail%")
-            ->with('turmas')
-            ->paginate(10);
-        }  else {
-            $data = Aluno::orderBy('id', 'DESC')->with('turmas')->paginate(10);
-        }
+        $data = Aluno::where('nome', 'LIKE', "%{$request->search}%")
+        ->orWhere('email', 'LIKE', "%$request->search%")
+        ->with('turmas')
+        ->paginate(10);
 
         return response()->json($data);
     }
@@ -35,7 +28,7 @@ class AlunoController extends Controller
             foreach ($data['turmas'] as $turma) {
                 
                 $turma = $this->verificarVagasTurma($turma);
-                if($turma['nome']) {
+                if(isset($turma['nome'])) {
                     return response()->json('Não há vagas para '. $turma['nome'], 401);
                 }
 
@@ -76,7 +69,7 @@ class AlunoController extends Controller
             foreach ($adicionarTurmas as $turmaId) {
                 $turma = $this->verificarVagasTurma($turmaId);
 
-                if($turma['nome']) {
+                if(isset($turma['nome'])) {
                     return response()->json('Não há vagas para '. $turma['nome'], 401);
                 }
 

@@ -30,6 +30,23 @@
                         <v-btn
                           v-bind="attrs"
                           v-on="on"
+                          color="success"
+                          fab
+                          x-small
+                          dark
+                          elevation="1"
+                          @click.prevent="ativarModalAlunos(turma.alunos)"
+                        >
+                          <v-icon>mdi-account-circle</v-icon>
+                        </v-btn>
+                      </template>
+                      <span>Ver alunos</span>
+                    </v-tooltip>
+                    <v-tooltip bottom>
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-btn
+                          v-bind="attrs"
+                          v-on="on"
                           color="warning"
                           fab
                           x-small
@@ -76,16 +93,25 @@
         </v-col>
       </v-card>
     </v-col>
+    <ModalAlunos
+      ref="alunosModal"
+    ></ModalAlunos>
   </v-container>
 </template>
 
 <script>
 import moment from "moment";
+import ModalAlunos from "./partials/ModalAlunos";
 
 export default {
+  components: {
+    ModalAlunos
+  },
   data(){
     return {
-      turmas: {}
+      turmas: {},
+      alunos: {},
+      dialog: false,
     }
   },
   created() {
@@ -117,6 +143,9 @@ export default {
             this.buscarTurmas();
           })
           .catch(error => this.$snotify.error(error.response.data, 'Ops...'));
+    },
+    ativarModalAlunos(alunos){
+      this.$refs.alunosModal.ativar(alunos);
     },
   },
   filters: {
